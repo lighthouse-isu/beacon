@@ -35,8 +35,6 @@ import (
 )
 
 
-var err error
-
 var pemFile = flag.String("pem", "", "Path to Cert file")
 var keyFile = flag.String("key", "", "Path to Key file")
 var address = flag.String("h", "127.0.0.1:5000", "Address to host under")
@@ -120,6 +118,9 @@ func main() {
 
     http.Handle("/", App)
     log.Printf("Listening on %s", *address)
+
+
+    var err error
 
     if *pemFile != "" && *keyFile != "" {
         log.Printf("Setting up secure server...")
