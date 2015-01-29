@@ -94,6 +94,10 @@ func GetProjectVMs() []*structs.VM {
         go func(vm *structs.VM) {
             defer wg.Done()
             vm.CanAccessDocker = vm.PingDocker()
+
+            if vm.CanAccessDocker {
+                vm.Version, _ = vm.GetDockerVersion()
+            }
         }(vm)
     }
     wg.Wait()
