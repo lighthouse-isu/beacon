@@ -16,12 +16,7 @@ package local
 
 import (
     "os"
-    "fmt"
     "strings"
-
-    "net/http"
-    "io/ioutil"
-    "encoding/json"
 
     "github.com/lighthouse/beacon/structs"
 )
@@ -50,41 +45,9 @@ func GetVMS() []*structs.VM {
     }
     boot2Docker.CanAccessDocker = boot2Docker.PingDocker()
 
-    api, err := getDockerAPIVersion(dockerHost)
-
-    if err == nil {
-        boot2Docker.Version = api
+    if boot2Docker.CanAccessDocker {
+        boot2Docker.Version, _ = boot2Docker.GetDockerVersion()
     }
 
     return []*structs.VM{boot2Docker}
-}
-
-func getDockerAPIVersion(dockerHost string) (string, error){
-
-    target := fmt.Sprintf("http://%s/v1/version", dockerHost)
-
-    req, err := http.NewRequest("GET", target, nil)
-    if err != nil {
-        return "", err
-    }
-
-    resp, err := http.DefaultClient.Do(req)
-    if err != nil {
-        return "", err
-    }
-
-    defer resp.Body.Close()
-
-    body, err := ioutil.ReadAll(resp.Body)
-    if err != nil {
-        return "", err
-    }
-
-    var api struct {
-        ApiVersion string
-    }
-
-    err = json.Unmarshal(body, &api)
-
-    return fmt.Sprintf("v%s", api.ApiVersion), err
 }
