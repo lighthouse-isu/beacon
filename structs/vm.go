@@ -68,6 +68,9 @@ func (this *VM) GetDockerVersion() (string, error) {
     }
 
     err = json.Unmarshal(body, &api)
-
-    return fmt.Sprintf("v%s", api.ApiVersion), err
+    if err != nil {
+        return "v1", err
+    }
+    
+    return fmt.Sprintf("v%s", api.ApiVersion), nil
 }
