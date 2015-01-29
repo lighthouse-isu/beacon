@@ -18,6 +18,8 @@ import (
     "fmt"
     "time"
     "net/http"
+    "io/ioutil"
+    "encoding/json"
 )
 
 type VM struct {
@@ -38,4 +40,37 @@ func (this *VM) PingDocker() bool {
     response, err := client.Get(pingAddress)
 
     return err == nil && response.StatusCode == 200
+}
+
+func (this *VM) GetDockerVersion() (string, error) {
+    dockerAddress := fmt.Sprintf("http://%s:%s/%s/version",
+        this.Address, this.Port, this.Version)
+
+    req, err := http.NewRequest("GET", dockerAddress, nil)
+    if err != nil {
+        return "v1", err
+    }
+
+    resp, err := http.DefaultClient.Do(req)
+    defer resp.Body.Close()
+
+    if err != nil {
+        return "v1", err
+    }
+
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return "v1", err
+    }
+
+    var api struct {
+        ApiVersion string
+    }
+
+    err = json.Unmarshal(body, &api)
+    if err != nil {
+        return "v1", err
+    }
+    
+    return fmt.Sprintf("v%s", api.ApiVersion), nil
 }

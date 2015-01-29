@@ -45,5 +45,9 @@ func GetVMS() []*structs.VM {
     }
     boot2Docker.CanAccessDocker = boot2Docker.PingDocker()
 
+    if boot2Docker.CanAccessDocker {
+        boot2Docker.Version, _ = boot2Docker.GetDockerVersion()
+    }
+
     return []*structs.VM{boot2Docker}
 }
