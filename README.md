@@ -35,6 +35,10 @@ go install github.com/lighthouse/beacon
 ```
 $GOPATH/bin/beacon
 ```
+### Test
+```
+go test github.com/lighthouse/beacon/...
+```
 
 ## Running With Docker
 ### Download
@@ -78,4 +82,4 @@ docker run -d -p 5000:5000 -e "DOCKER_HOST=tcp://192.168.59.103:2375" beacon -h 
 Interfaces with [Compute Engine](https://cloud.google.com/compute/) and requires that the hosting vm has "Compute" read/write privalages to the Project to detect existing vms.
 
 ### Digital Ocean
-Interfaces with [Digital Ocean](https://www.digitalocean.com/) and requires
+Interfaces with [Digital Ocean](https://www.digitalocean.com/) and requires that an api token be set to the hosting vm's "User Data".  Read more info [here](https://github.com/lighthouse/beacon/pull/4).
