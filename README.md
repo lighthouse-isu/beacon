@@ -83,3 +83,15 @@ Interfaces with [Compute Engine](https://cloud.google.com/compute/) and requires
 
 ### Digital Ocean
 Interfaces with [Digital Ocean](https://www.digitalocean.com/) and requires that an api token be set to the hosting vm's "User Data".  Read more info [here](https://github.com/lighthouse/beacon/pull/4).
+
+### Config
+Instead of relying on a provider api you can manually create a config file that list available ips of vms you want beacon to communicate with.
+For example all you have to do is drop a ```config.json``` into the running directory of Beacon and it will take care of the rest for you.
+A simple  ```config.json``` can look something like this.
+```JSON
+[
+    "192.168.59.103",
+    "127.0.0.1"
+]
+
+```
