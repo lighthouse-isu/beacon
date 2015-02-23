@@ -16,12 +16,18 @@ package config
 
 import (
     "os"
+    "fmt"
     "sync"
     "io/ioutil"
     "encoding/json"
 
     "github.com/lighthouse/beacon/structs"
 )
+
+type HostConfig struct {
+    Host string
+    Port string
+}
 
 var Driver = &structs.Driver {
     Name: "config",
@@ -42,15 +48,15 @@ func GetVMs() []*structs.VM {
         return discoveredVMs
     }
 
-    var vmIps []string
-    json.Unmarshal(file, &vmIps)
+    var hostConfigs []*HostConfig
+    json.Unmarshal(file, &hostConfigs)
 
     var wg sync.WaitGroup
-    for _, vmIp := range vmIps {
+    for _, hostConfig := range hostConfigs {
         vm := &structs.VM{
-            Name: vmIp,
-            Address: vmIp,
-            Port: "2375",
+            Name: fmt.Sprintf("%s:%s", hostConfig.Host, hostConfig.Port),
+            Address: hostConfig.Host,
+            Port: hostConfig.Port,
             Version: "v1",
             CanAccessDocker: false,
         }
