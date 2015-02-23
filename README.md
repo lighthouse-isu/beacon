@@ -90,8 +90,8 @@ For example all you have to do is drop a ```config.json``` into the running dire
 A simple  ```config.json``` can look something like this.
 ```JSON
 [
-    "192.168.59.103",
-    "127.0.0.1"
+    {"Host": "192.168.59.103", "Port": "2375"},
+    {"Host": "127.0.0.1", "Port": "80"}
 ]
 
 ```
