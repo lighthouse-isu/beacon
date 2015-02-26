@@ -22,6 +22,7 @@ import (
 
     "github.com/lighthouse/beacon/drivers/gce"
     "github.com/lighthouse/beacon/drivers/ocean"
+    "github.com/lighthouse/beacon/drivers/config"
     "github.com/lighthouse/beacon/drivers/local"
     "github.com/lighthouse/beacon/drivers/unknown"
 
@@ -32,6 +33,7 @@ var Preferred = flag.String("driver", "", "Specified driver to use")
 var Defaults = []*structs.Driver{
     gce.Driver,
     ocean.Driver,
+    config.Driver,
     local.Driver,
 }
 
