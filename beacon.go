@@ -59,6 +59,9 @@ func init() {
             return
         }
 
+        // TESTING header addition
+        req.Header.Add("Content-Type", "application/json")
+
         resp, err := http.DefaultClient.Do(req)
 
         if err != nil {
