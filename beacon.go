@@ -59,6 +59,11 @@ func init() {
             return
         }
 
+        contentType := r.Header.Get("Content-Type")
+        if contentType != "" {
+            req.Header.Set("Content-Type", contentType)
+        }
+
         resp, err := http.DefaultClient.Do(req)
 
         if err != nil {
