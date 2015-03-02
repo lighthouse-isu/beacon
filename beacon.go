@@ -59,8 +59,10 @@ func init() {
             return
         }
 
-        // TESTING header addition
-        req.Header.Add("Content-Type", "application/json")
+        contentType := r.Header.Get("Content-Type")
+        if contentType != "" {
+            req.Header.Set("Content-Type", contentType)
+        }
 
         resp, err := http.DefaultClient.Do(req)
 
