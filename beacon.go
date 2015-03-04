@@ -50,7 +50,7 @@ func init() {
 
     App.Handle("/d/*", func(c web.C, w http.ResponseWriter, r *http.Request) {
         target := fmt.Sprintf("http://%s",
-            strings.SplitN(r.URL.Path, "/", 3)[2])
+            strings.SplitN(r.URL.String(), "/", 3)[2])
 
         req, err := http.NewRequest(r.Method, target, r.Body)
         if err != nil {
