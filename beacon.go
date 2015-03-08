@@ -20,7 +20,6 @@ import (
     "log"
     "net/http"
     "encoding/json"
-    "io/ioutil"
     "strings"
 
     "github.com/mgutz/ansi"
@@ -65,14 +64,7 @@ func init() {
         }
 
         resp, err := http.DefaultClient.Do(req)
-
-        if err != nil {
-            w.WriteHeader(http.StatusInternalServerError)
-            fmt.Fprint(w, err)
-            return
-        }
-
-        body, err := ioutil.ReadAll(resp.Body)
+        defer resp.Body.Close()
 
         if err != nil {
             w.WriteHeader(http.StatusInternalServerError)
@@ -81,7 +73,16 @@ func init() {
         }
 
         w.WriteHeader(resp.StatusCode)
-        w.Write(body)
+        var bodyBuffer = make([]byte, 2048)
+
+        for {
+            n, err := resp.Body.Read(bodyBuffer)
+            w.Write(bodyBuffer[:n])
+
+            if err != nil {
+                break
+            }
+        }
     })
 
     App.Get("/vms", func(c web.C, w http.ResponseWriter, r *http.Request) {
