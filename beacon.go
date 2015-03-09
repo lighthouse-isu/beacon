@@ -73,7 +73,7 @@ func init() {
         }
 
         w.WriteHeader(resp.StatusCode)
-        var bodyBuffer = make([]byte, 2048)
+        var bodyBuffer = make([]byte, 16)
 
         for {
             n, err := resp.Body.Read(bodyBuffer)
