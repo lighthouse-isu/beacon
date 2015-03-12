@@ -21,9 +21,12 @@ import (
 
     "github.com/lighthouse/beacon/structs"
 
-    "code.google.com/p/gameboy1092-goauth2/compute/serviceaccount"
-    compute "code.google.com/p/google-api-go-client/compute/v1"
+    "golang.org/x/oauth2"
+    "golang.org/x/oauth2/google"
+    "google.golang.org/cloud/compute/metadata"
+    compute "google.golang.org/api/compute/v1"
 )
+
 
 var Driver = &structs.Driver {
     Name: "gce",
@@ -32,13 +35,7 @@ var Driver = &structs.Driver {
 }
 
 func IsApplicable() bool {
-    request, _ := http.NewRequest("GET", "http://metadata.google.internal/", nil)
-    request.Header.Add("Metadata-Flavor", "Google")
-
-    client := http.Client{}
-    resp, err := client.Do(request)
-
-    return err == nil && resp.StatusCode == 200
+    return metadata.OnGCE()
 }
 
 func GetCurrentProjectID() (string, error) {
@@ -63,7 +60,11 @@ func GetCurrentProjectID() (string, error) {
 }
 
 func GetProjectVMs() []*structs.VM {
-    client, _ := serviceaccount.NewClient(&serviceaccount.Options{})
+    client := &http.Client{
+        Transport: &oauth2.Transport{
+            Source: google.ComputeTokenSource(""),
+        },
+    }
     computeClient, _ := compute.New(client)
 
     projectID, _ := GetCurrentProjectID()
